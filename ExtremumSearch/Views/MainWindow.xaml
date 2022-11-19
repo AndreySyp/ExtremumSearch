@@ -1,0 +1,115 @@
+﻿<Window x:Class="ExtremumSearch.MainWindow"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        mc:Ignorable="d"
+        
+        xmlns:cmd="clr-namespace:ExtremumSearch.Infrastructure.Commands.Base"
+        xmlns:vm="clr-namespace:ExtremumSearch.ViewModels"
+        xmlns:local="clr-namespace:ExtremumSearch"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        
+        Title="ExtremumSearch" 
+        Height="400" 
+        Width="900">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid Background="#ECF1EF">
+        <!--#region GridDefinitions-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="3*" 
+                              MaxWidth="360"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <!--#endregion-->
+
+        <StackPanel Grid.Column="0"
+                    Margin="2,0,2,0" 
+                    Orientation="Vertical" 
+                    VerticalAlignment="Center" >
+            <!--#region Input-->
+            <StackPanel Margin="2,0,2,10" Orientation="Vertical">
+                <TextBlock Text="Equation" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding InputEquation, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource KeyBox}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="2,0,2,10">
+                <TextBlock Text="Interval" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding InputIntervalA, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="TextBox_OnlyNumber" 
+                         Style="{StaticResource KeyBox}"/>
+                <TextBox Text="{Binding InputIntervalB, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="TextBox_OnlyNumber" 
+                         Style="{StaticResource KeyBox}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="2,0,2,10">
+                <TextBlock Text="Error" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding InputError, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="TextBox_OnlyNumber" 
+                         Style="{StaticResource KeyBox}"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="2,0,2,10">
+                <TextBlock Text="Method" HorizontalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding MyItems}" 
+                          SelectedItem="{Binding SelectedMethod}" 
+                          HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="2,0,2,10">
+                <TextBlock Text="Extremum" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <RadioButton Content="min" IsChecked="{Binding IsMin}" />
+                    <RadioButton Content="max" IsChecked="{Binding IsMax}" />
+                </StackPanel>
+            </StackPanel>
+            <!--#endregion-->
+
+            <Button Command="{Binding SolCommand}" 
+                    Content="Start" 
+                    Style="{StaticResource StartButton}"/>
+
+            <!--#region Output-->
+            <StackPanel Margin="2,0,2,10" 
+                        Orientation="Vertical" 
+                        HorizontalAlignment="Center">
+                <TextBlock Text="Answer" HorizontalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" Margin="2,0,2,0">
+                    <TextBlock Text="x: "/>
+                    <TextBox Text="{Binding OutputX, Mode=OneWay}" 
+                             Style="{StaticResource KeyBox}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="2,0,2,0">
+                    <TextBlock Text="y: "/>
+                    <TextBox Text="{Binding OutputY, Mode=OneWay}" 
+                             Style="{StaticResource KeyBox}"/>
+                </StackPanel>
+            </StackPanel>
+            <!--#endregion-->
+
+        </StackPanel>
+
+        <DataGrid Grid.Column="1" 
+                  ItemsSource="{Binding Grid}" 
+                  AlternatingRowBackground="LightGray"
+                  GridLinesVisibility="Vertical" 
+                  IsReadOnly="True" 
+                  RowHeight="25" />
+
+        <lvc:CartesianChart Series="{Binding Chart}" Grid.Column="3">
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis Title="f(x)"></lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis Title="x"></lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+
+        </lvc:CartesianChart>
+    </Grid>
+</Window>
